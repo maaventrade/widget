@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.alexmochalov.widget"
     android:versionCode="1"
@@ -13,19 +14,25 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <receiver
-            android:name="widget.MyWidget"
+            android:name="MyWidget"
             android:icon="@android:drawable/star_big_on"
             android:label="@string/widget_name" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" >
                 </action>
             </intent-filter>
-
+            
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_metadata" >
             </meta-data>
         </receiver>
+        <activity android:name="ConfigActivity"  android:icon="@drawable/ic_launcher">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" >
+                </action>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

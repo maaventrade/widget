@@ -2,8 +2,10 @@
     android:initialLayout="@layout/widget"
     android:minHeight="40dp"
     android:minWidth="110dp"
-    android:minResizeHeight="73dp"
+    android:minResizeHeight="40dp"
     android:minResizeWidth="110dp"
-    android:updatePeriodMillis="2400000" >
+    android:updatePeriodMillis="2400000"
+	 android:configure="com.alexmochalov.widget.ConfigActivity"
+     >
 
 </appwidget-provider>

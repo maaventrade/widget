@@ -1,8 +1,12 @@
 <resources>
 
     <string name="app_name">widget</string>
-
-	<string name="widget_name">My first widget</string>
-	<string name="widget_text">Text in widget</string>
+	<string name="widget_name">My second widget 1111</string>
+	
+	<string name="config">Config</string>
+	<string name="update">Update</string>
+	<string name="count">Count</string>
+	<string name="ok">Ok</string>
+		
     
 </resources>
