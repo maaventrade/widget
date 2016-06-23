@@ -4,12 +4,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <EditText
-        android:id="@+id/etFormat"
-        android:layout_width="match_parent"
+    <CheckBox
+        android:id="@+id/checkBoxAutoTurn"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10" >
-    </EditText>
+        android:text="@string/auto" />
 
     <Button
         android:layout_width="wrap_content"

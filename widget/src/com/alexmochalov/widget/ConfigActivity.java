@@ -8,19 +8,19 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 public class ConfigActivity extends Activity {
 
   public final static String WIDGET_PREF = "widget_pref";
-  public final static String WIDGET_TIME_FORMAT = "widget_time_format_";
-  public final static String WIDGET_COUNT = "widget_count_";
+  public final static String WIDGET_AUTO_TURNING = "auto_turning";
 
   int widgetID = AppWidgetManager.INVALID_APPWIDGET_ID;
   Intent resultValue;
   SharedPreferences sp;
-  EditText etFormat;
-
+  CheckBox checkBoxAutoTurn;
+  
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
@@ -46,15 +46,11 @@ public class ConfigActivity extends Activity {
     setContentView(R.layout.config);
     
     sp = getSharedPreferences(WIDGET_PREF, MODE_PRIVATE);
-    etFormat = (EditText) findViewById(R.id.etFormat);
-    etFormat.setText(sp.getString(WIDGET_TIME_FORMAT + widgetID, "HH:mm:ss"));
-    
-    int cnt = sp.getInt(ConfigActivity.WIDGET_COUNT + widgetID, -1);
-    if (cnt == -1) sp.edit().putInt(WIDGET_COUNT + widgetID, 0);
+    checkBoxAutoTurn = (CheckBox) findViewById(R.id.checkBoxAutoTurn);
   }
   
   public void onClick(View v){
-    sp.edit().putString(WIDGET_TIME_FORMAT + widgetID, etFormat.getText().toString()).commit();
+    sp.edit().putBoolean(WIDGET_AUTO_TURNING + widgetID, checkBoxAutoTurn.isChecked()).commit();
     
     MyWidget.updateWidget(this, AppWidgetManager.getInstance(this), widgetID);
     

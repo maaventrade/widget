@@ -7,6 +7,9 @@
     <uses-sdk
         android:minSdkVersion="16"
         android:targetSdkVersion="21" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
 
     <application
         android:allowBackup="true"
@@ -15,7 +18,7 @@
         android:theme="@style/AppTheme" >
         <receiver
             android:name="MyWidget"
-            android:icon="@android:drawable/star_big_on"
+            android:icon="@drawable/btn3"
             android:label="@string/widget_name" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" >
@@ -26,6 +29,15 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_metadata" >
             </meta-data>
+            
+		<intent-filter>
+        	<action android:name="android.net.wifi.WIFI_AP_STATE_CHANGED" />
+    	</intent-filter>
+                
+		<intent-filter>
+            <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+        </intent-filter>
+        		
         </receiver>
         <activity android:name="ConfigActivity"  android:icon="@drawable/ic_launcher">
             <intent-filter>
