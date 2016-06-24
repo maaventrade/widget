@@ -28,7 +28,7 @@ public class MyWidget extends AppWidgetProvider {
 	
 	private static boolean autoTurn = false;
 	
-	private static String info = "????";
+	//private static String info = "????";
 	
 	final static String ACTION_PRESSED = "ru.startandroid.develop.p1201clickwidget.button_pressed";
 	final static String ACTION_WIFI_STATE_CHANGED = "android.net.wifi.WIFI_AP_STATE_CHANGED";
@@ -63,20 +63,17 @@ public class MyWidget extends AppWidgetProvider {
 
 	static void updateWidget(Context ctx, AppWidgetManager appWidgetManager,
 			int widgetID) {
-		SharedPreferences sp = ctx.getSharedPreferences(
-				ConfigActivity.WIDGET_PREF, Context.MODE_PRIVATE);
-
-		// Читаем флажок
-		autoTurn = sp.getBoolean(ConfigActivity.WIDGET_AUTO_TURNING
-				+ widgetID, false);
-		
-		if (autoTurn){
-			///
-		}
-
 		// Кнопка
 		RemoteViews widgetView = new RemoteViews(ctx.getPackageName(),
 				R.layout.widget);
+		
+		// Читаем флажок
+		SharedPreferences sp = ctx.getSharedPreferences(
+				ConfigActivity.WIDGET_PREF, Context.MODE_PRIVATE);
+		autoTurn = sp.getBoolean(ConfigActivity.WIDGET_AUTO_TURNING
+				+ widgetID, false);
+		
+	    Log.d("", "READ "+autoTurn);
 		
 		Intent buttonIntent = new Intent(ctx, MyWidget.class);
 		buttonIntent.setAction(ACTION_PRESSED);
@@ -86,11 +83,22 @@ public class MyWidget extends AppWidgetProvider {
 		
         if (state % 10 == WifiManager.WIFI_STATE_ENABLED)
         	widgetView.setImageViewResource(R.id.imageButton1, R.drawable.btn3);
-        else if (state % 10 == WifiManager.WIFI_STATE_DISABLED) 
-        	widgetView.setImageViewResource(R.id.imageButton1, R.drawable.btn1);
-        else			
+        else if (state % 10 != WifiManager.WIFI_STATE_DISABLED) 
         	widgetView.setImageViewResource(R.id.imageButton1, R.drawable.btn2);
+        else			
+        	widgetView.setImageViewResource(R.id.imageButton1, R.drawable.btn1);
 		
+        
+     	//widgetView.setTextViewText(R.id.widgetTextViewInfo, info);
+     	// Конфигурационный экран (TextView)
+        /*
+        Intent configIntent = new Intent(ctx, ConfigActivity.class);
+        configIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_CONFIGURE);
+        configIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetID);
+        PendingIntent pIntentA = PendingIntent.getActivity(ctx, widgetID,
+            configIntent, 0);
+        widgetView.setOnClickPendingIntent(R.id.widgetTextViewInfo, pIntentA);
+     	*/
 		// Обновляем виджет
 		appWidgetManager.updateAppWidget(widgetID, widgetView);
 	}
@@ -106,19 +114,9 @@ public class MyWidget extends AppWidgetProvider {
 			ApManager.configApState(context);
 		} else if (intent.getAction().equalsIgnoreCase(ACTION_POWER_CONNECTED)){
 			// Подключено зарядное устройство
-			//if (autoTurn)
+			if (autoTurn)
 				// Включаем wifi hotspot 
-				//ApManager.configApState(context, true);
-			info = "POwer on";
-			AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-
-		    final int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, 
-																						  this.getClass().getName()));
-
-		    for (int i : appWidgetIds) {
-				updateWidget(context, appWidgetManager, i);
-			}		    
-			
+				ApManager.configApState(context, true);
 		} else if (intent.getAction().equalsIgnoreCase(ACTION_WIFI_STATE_CHANGED)){
             state = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, 0);
 			Log.d("W","state "+state);

@@ -15,14 +15,12 @@ public final class R {
         public static final int btn2=0x7f020001;
         public static final int btn3=0x7f020002;
         public static final int ic_launcher=0x7f020003;
-        public static final int off=0x7f020004;
-        public static final int on=0x7f020005;
+        public static final int setup=0x7f020004;
     }
     public static final class id {
         public static final int checkBoxAutoTurn=0x7f070000;
-        public static final int etFormat=0x7f070003;
+        public static final int etFormat=0x7f070002;
         public static final int imageButton1=0x7f070001;
-        public static final int widgetTextViewInfo=0x7f070002;
     }
     public static final class layout {
         public static final int config=0x7f030000;

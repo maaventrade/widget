@@ -7,6 +7,7 @@ import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -47,10 +48,14 @@ public class ConfigActivity extends Activity {
     
     sp = getSharedPreferences(WIDGET_PREF, MODE_PRIVATE);
     checkBoxAutoTurn = (CheckBox) findViewById(R.id.checkBoxAutoTurn);
+    checkBoxAutoTurn.setChecked(sp.getBoolean(WIDGET_AUTO_TURNING + widgetID, false));
+    
   }
   
   public void onClick(View v){
     sp.edit().putBoolean(WIDGET_AUTO_TURNING + widgetID, checkBoxAutoTurn.isChecked()).commit();
+    
+    Log.d("", "SET "+checkBoxAutoTurn.isChecked());
     
     MyWidget.updateWidget(this, AppWidgetManager.getInstance(this), widgetID);
     
