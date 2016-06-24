@@ -28,6 +28,8 @@ public class MyWidget extends AppWidgetProvider {
 	
 	private static boolean autoTurn = false;
 	
+	private static String info = "????";
+	
 	final static String ACTION_PRESSED = "ru.startandroid.develop.p1201clickwidget.button_pressed";
 	final static String ACTION_WIFI_STATE_CHANGED = "android.net.wifi.WIFI_AP_STATE_CHANGED";
 	final static String ACTION_POWER_CONNECTED = "android.intent.action.ACTION_POWER_CONNECTED";
@@ -104,9 +106,19 @@ public class MyWidget extends AppWidgetProvider {
 			ApManager.configApState(context);
 		} else if (intent.getAction().equalsIgnoreCase(ACTION_POWER_CONNECTED)){
 			// Подключено зарядное устройство
-			if (autoTurn)
+			//if (autoTurn)
 				// Включаем wifi hotspot 
-				ApManager.configApState(context, true);
+				//ApManager.configApState(context, true);
+			info = "POwer on";
+			AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+
+		    final int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, 
+																						  this.getClass().getName()));
+
+		    for (int i : appWidgetIds) {
+				updateWidget(context, appWidgetManager, i);
+			}		    
+			
 		} else if (intent.getAction().equalsIgnoreCase(ACTION_WIFI_STATE_CHANGED)){
             state = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, 0);
 			Log.d("W","state "+state);
