@@ -1,11 +1,21 @@
 package com.alexmochalov.widget;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.lang.reflect.Method;
 import java.sql.Date;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 import com.alexmochalov.widget.R;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -18,10 +28,13 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.widget.RemoteViews;
 
 public class MyWidget extends AppWidgetProvider {
+	final static String pathToFile = Environment.getExternalStorageDirectory().getPath() + "/log.html"; 
+	
 	private static boolean status = false;
 
 	private static int state = 0;
@@ -37,6 +50,7 @@ public class MyWidget extends AppWidgetProvider {
 	@Override
 	public void onEnabled(Context context) {
 		super.onEnabled(context);
+		clearFile(context);
 	}
 
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager,
@@ -61,25 +75,26 @@ public class MyWidget extends AppWidgetProvider {
 		editor.commit();
 	}
 
-	static void updateWidget(Context ctx, AppWidgetManager appWidgetManager,
+	static void updateWidget(Context context, AppWidgetManager appWidgetManager,
 			int widgetID) {
 		// Кнопка
-		RemoteViews widgetView = new RemoteViews(ctx.getPackageName(),
+		RemoteViews widgetView = new RemoteViews(context.getPackageName(),
 				R.layout.widget);
 		
 		// Читаем флажок
-		SharedPreferences sp = ctx.getSharedPreferences(
+		SharedPreferences sp = context.getSharedPreferences(
 				ConfigActivity.WIDGET_PREF, Context.MODE_PRIVATE);
 		autoTurn = sp.getBoolean(ConfigActivity.WIDGET_AUTO_TURNING
 				+ widgetID, false);
 		
-	    Log.d("", "READ "+autoTurn);
-		
-		Intent buttonIntent = new Intent(ctx, MyWidget.class);
+		Intent buttonIntent = new Intent(context, MyWidget.class);
 		buttonIntent.setAction(ACTION_PRESSED);
 		buttonIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetID);
-		PendingIntent pIntent = PendingIntent.getBroadcast(ctx, widgetID, buttonIntent, 0);
+		PendingIntent pIntent = PendingIntent.getBroadcast(context, widgetID, buttonIntent, 0);
 		widgetView.setOnClickPendingIntent(R.id.imageButton1, pIntent);
+		
+
+		writeToFile(context, "updateWidget. state "+state);
 		
         if (state % 10 == WifiManager.WIFI_STATE_ENABLED)
         	widgetView.setImageViewResource(R.id.imageButton1, R.drawable.btn3);
@@ -103,26 +118,54 @@ public class MyWidget extends AppWidgetProvider {
 		appWidgetManager.updateAppWidget(widgetID, widgetView);
 	}
 	
+	private void clearFile(Context context) {
+		try {
+			File file = new File(pathToFile);
+			
+			Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
+			writer.write("");
+			writer.close();
+	    }
+	    catch (IOException e) {
+	        Log.e("Exception", "File write failed: " + e.toString());
+	    } 
+	}
+	
+	private static void writeToFile(Context context, String string) {
+		try {
+			File file = new File(pathToFile);
+			
+			Writer writer = new BufferedWriter(new FileWriter(file, true));
+			
+			string = DateFormat.getDateTimeInstance().format(System.currentTimeMillis()) + " " + string;
+			string = string+" <br>\n";
+			writer.append(string);
+			writer.close();
+	    }
+	    catch (IOException e) {
+	        Log.e("Exception", "File write failed: " + e.toString());
+	    } 
+	}
+	
+	
 	public void onReceive(Context context, Intent intent) {
 		super.onReceive(context, intent);
-		
-		Log.d("W","onReceive "+intent.getAction());
 		
 		if (intent.getAction().equalsIgnoreCase(ACTION_PRESSED)) {
 			// Нажата ImageButton
 			// Переключаем состояние wifi hotspot
 			ApManager.configApState(context);
+			writeToFile(context, "onReceive PRESSED ");
+			
 		} else if (intent.getAction().equalsIgnoreCase(ACTION_POWER_CONNECTED)){
 			// Подключено зарядное устройство
+			writeToFile(context, "onReceive POWER CONNECTED. Auto: "+autoTurn);
 			if (autoTurn)
 				// Включаем wifi hotspot 
 				ApManager.configApState(context, true);
 		} else if (intent.getAction().equalsIgnoreCase(ACTION_WIFI_STATE_CHANGED)){
             state = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, 0);
-			Log.d("W","state "+state);
-			
-			//status = (WifiManager.WIFI_STATE_ENABLED == state % 10);
-			//Log.d("W","status "+status);
+            writeToFile(context, "onReceive WIFI STATE CHANGED. state"+state);
 			
 			AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
 			
