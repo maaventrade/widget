@@ -37,8 +37,8 @@ public class MyWidget extends AppWidgetProvider {
 	
 	private static boolean pressed = false;
 
-	private static int state = 0;
-	private static int statePrev = 0;
+	private static int state = -1;
+	private static int statePrev = -1;
 	
 	private static boolean autoTurn = false;
 	
@@ -102,7 +102,7 @@ public class MyWidget extends AppWidgetProvider {
 		widgetView.setOnClickPendingIntent(R.id.imageButton1, pIntent);
 		
 
-		//writeToFile(context, "updateWidget. state "+state);
+		writeToFile(context, "updateWidget. state "+state);
 		if (statePrev != state){
 			pressed = false;
 	  		statePrev = state;
@@ -112,15 +112,19 @@ public class MyWidget extends AppWidgetProvider {
 			switch (state % 10){
 			case WifiManager.WIFI_STATE_DISABLING:
    				widgetView.setImageViewResource(R.id.imageButton1, R.drawable.btn21);
+   				writeToFile(context, "set21");
 				break;
 			case WifiManager.WIFI_STATE_DISABLED:
  				widgetView.setImageViewResource(R.id.imageButton1, R.drawable.btn11);
+   				writeToFile(context, "set11");
 				break;
 			case WifiManager.WIFI_STATE_ENABLING:
    				widgetView.setImageViewResource(R.id.imageButton1, R.drawable.btn21);
+   				writeToFile(context, "set211");
 				break;
 			case WifiManager.WIFI_STATE_ENABLED:
  			 	widgetView.setImageViewResource(R.id.imageButton1, R.drawable.btn31);
+   				writeToFile(context, "set31");
 				break;
 			default:
 				break;
@@ -129,15 +133,19 @@ public class MyWidget extends AppWidgetProvider {
 			switch (state % 10){
 			case WifiManager.WIFI_STATE_DISABLING:
    				widgetView.setImageViewResource(R.id.imageButton1, R.drawable.btn2);
+   				writeToFile(context, "set2");
 				break;
 			case WifiManager.WIFI_STATE_DISABLED:
  				widgetView.setImageViewResource(R.id.imageButton1, R.drawable.btn1);
+   				writeToFile(context, "set1");
 				break;
 			case WifiManager.WIFI_STATE_ENABLING:
    				widgetView.setImageViewResource(R.id.imageButton1, R.drawable.btn2);
+   				writeToFile(context, "set22");
 				break;
 			case WifiManager.WIFI_STATE_ENABLED:
  			 	widgetView.setImageViewResource(R.id.imageButton1, R.drawable.btn3);
+   				writeToFile(context, "set3");
 				break;
 			default:
 				break;
