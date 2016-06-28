@@ -58,12 +58,7 @@ public class MyWidget extends AppWidgetProvider {
 		else
 			state = WifiManager.WIFI_STATE_DISABLED;
 		
-		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-		final int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, 
-																					  this.getClass().getName()));
-		for (int i : appWidgetIds) {
-			updateWidget(context, appWidgetManager, i);
-		}		    
+        updateAllWigets(context);
 	}
 
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager,
@@ -108,33 +103,47 @@ public class MyWidget extends AppWidgetProvider {
 		
 
 		//writeToFile(context, "updateWidget. state "+state);
-		if (state != statePrev){
+		if (statePrev != state){
 			pressed = false;
+	  		statePrev = state;
 		}
-		
-		switch (state % 10){
+
+		if (pressed){
+			switch (state % 10){
+			case WifiManager.WIFI_STATE_DISABLING:
+   				widgetView.setImageViewResource(R.id.imageButton1, R.drawable.btn21);
+				break;
+			case WifiManager.WIFI_STATE_DISABLED:
+ 				widgetView.setImageViewResource(R.id.imageButton1, R.drawable.btn11);
+				break;
+			case WifiManager.WIFI_STATE_ENABLING:
+   				widgetView.setImageViewResource(R.id.imageButton1, R.drawable.btn21);
+				break;
+			case WifiManager.WIFI_STATE_ENABLED:
+ 			 	widgetView.setImageViewResource(R.id.imageButton1, R.drawable.btn31);
+				break;
+			default:
+				break;
+			}
+		} else {
+			switch (state % 10){
 			case WifiManager.WIFI_STATE_DISABLING:
    				widgetView.setImageViewResource(R.id.imageButton1, R.drawable.btn2);
-				
 				break;
 			case WifiManager.WIFI_STATE_DISABLED:
  				widgetView.setImageViewResource(R.id.imageButton1, R.drawable.btn1);
-				
 				break;
 			case WifiManager.WIFI_STATE_ENABLING:
    				widgetView.setImageViewResource(R.id.imageButton1, R.drawable.btn2);
-				
 				break;
 			case WifiManager.WIFI_STATE_ENABLED:
  			 	widgetView.setImageViewResource(R.id.imageButton1, R.drawable.btn3);
-				
 				break;
 			default:
-				
 				break;
+			}
 		}
 		
-  		statePrev = state;
         
      	//widgetView.setTextViewText(R.id.widgetTextViewInfo, info);
      	// Конфигурационный экран (TextView)
@@ -180,12 +189,25 @@ public class MyWidget extends AppWidgetProvider {
 	}
 	
 	
+	private void updateAllWigets(Context context){
+		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+		
+	    final int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, 
+	    		this.getClass().getName()));
+	    
+	    for (int i : appWidgetIds) {
+			updateWidget(context, appWidgetManager, i);
+		}		    
+	}
+	
 	public void onReceive(Context context, Intent intent) {
 		super.onReceive(context, intent);
 		
 		if (intent.getAction().equalsIgnoreCase(ACTION_PRESSED)) {
 			// Нажата ImageButton
 			pressed = true;
+            updateAllWigets(context);
+            
 			// Переключаем состояние wifi hotspot
 			ApManager.configApState(context);
 			writeToFile(context, "onReceive PRESSED ");
@@ -200,15 +222,7 @@ public class MyWidget extends AppWidgetProvider {
             state = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, 0);
             writeToFile(context, "onReceive WIFI STATE CHANGED. state"+state);
 			
-			AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-			
-		    final int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, 
-		    		this.getClass().getName()));
-		    
-		    for (int i : appWidgetIds) {
-				updateWidget(context, appWidgetManager, i);
-			}		    
-			
+            updateAllWigets(context);
 		}
 	}
 
