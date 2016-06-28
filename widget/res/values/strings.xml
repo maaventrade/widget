@@ -3,10 +3,7 @@
     <string name="app_name">Turn hotspot</string>
 	<string name="widget_name">Turn hotspot widget</string>
 	
-	<string name="config">Config</string>
-	<string name="update">Update</string>
-	<string name="count">Count</string>
-	
+	<string name="hotspot">Hotspot</string>
 	
 	<string name="ok">Ok</string>
 	<string name="auto">Turn wifi hotspot when charger connected</string>

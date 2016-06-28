@@ -35,9 +35,10 @@ import android.widget.RemoteViews;
 public class MyWidget extends AppWidgetProvider {
 	final static String pathToFile = Environment.getExternalStorageDirectory().getPath() + "/log.html"; 
 	
-	private static boolean status = false;
+	private static boolean pressed = false;
 
 	private static int state = 0;
+	private static int statePrev = 0;
 	
 	private static boolean autoTurn = false;
 	
@@ -51,6 +52,18 @@ public class MyWidget extends AppWidgetProvider {
 	public void onEnabled(Context context) {
 		super.onEnabled(context);
 		clearFile(context);
+
+		if  (ApManager.isApOn(context))
+			state = WifiManager.WIFI_STATE_ENABLED;
+		else
+			state = WifiManager.WIFI_STATE_DISABLED;
+		
+		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+		final int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, 
+																					  this.getClass().getName()));
+		for (int i : appWidgetIds) {
+			updateWidget(context, appWidgetManager, i);
+		}		    
 	}
 
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager,
@@ -94,26 +107,45 @@ public class MyWidget extends AppWidgetProvider {
 		widgetView.setOnClickPendingIntent(R.id.imageButton1, pIntent);
 		
 
-		writeToFile(context, "updateWidget. state "+state);
+		//writeToFile(context, "updateWidget. state "+state);
+		if (state != statePrev){
+			pressed = false;
+		}
 		
-        if (state % 10 == WifiManager.WIFI_STATE_ENABLED)
-        	widgetView.setImageViewResource(R.id.imageButton1, R.drawable.btn3);
-        else if (state % 10 != WifiManager.WIFI_STATE_DISABLED) 
-        	widgetView.setImageViewResource(R.id.imageButton1, R.drawable.btn2);
-        else			
-        	widgetView.setImageViewResource(R.id.imageButton1, R.drawable.btn1);
+		switch (state % 10){
+			case WifiManager.WIFI_STATE_DISABLING:
+   				widgetView.setImageViewResource(R.id.imageButton1, R.drawable.btn2);
+				
+				break;
+			case WifiManager.WIFI_STATE_DISABLED:
+ 				widgetView.setImageViewResource(R.id.imageButton1, R.drawable.btn1);
+				
+				break;
+			case WifiManager.WIFI_STATE_ENABLING:
+   				widgetView.setImageViewResource(R.id.imageButton1, R.drawable.btn2);
+				
+				break;
+			case WifiManager.WIFI_STATE_ENABLED:
+ 			 	widgetView.setImageViewResource(R.id.imageButton1, R.drawable.btn3);
+				
+				break;
+			default:
+				
+				break;
+		}
 		
+  		statePrev = state;
         
      	//widgetView.setTextViewText(R.id.widgetTextViewInfo, info);
      	// Конфигурационный экран (TextView)
-        /*
-        Intent configIntent = new Intent(ctx, ConfigActivity.class);
+        
+        Intent configIntent = new Intent(context, ConfigActivity.class);
         configIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_CONFIGURE);
         configIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetID);
-        PendingIntent pIntentA = PendingIntent.getActivity(ctx, widgetID,
+        PendingIntent pIntentA = PendingIntent.getActivity(context, widgetID,
             configIntent, 0);
         widgetView.setOnClickPendingIntent(R.id.widgetTextViewInfo, pIntentA);
-     	*/
+     	
 		// Обновляем виджет
 		appWidgetManager.updateAppWidget(widgetID, widgetView);
 	}
@@ -153,6 +185,7 @@ public class MyWidget extends AppWidgetProvider {
 		
 		if (intent.getAction().equalsIgnoreCase(ACTION_PRESSED)) {
 			// Нажата ImageButton
+			pressed = true;
 			// Переключаем состояние wifi hotspot
 			ApManager.configApState(context);
 			writeToFile(context, "onReceive PRESSED ");
