@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bronze"
+    android:background="@android:color/transparent"
     android:orientation="vertical" >
 	
     <!--  "
@@ -13,7 +13,7 @@
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:layout_gravity="center_vertical"
-	    android:background="@color/bronze"
+	    android:background="@android:color/transparent"
 	    android:src="@drawable/btn1" />
 
 	<TextView
@@ -22,8 +22,8 @@
 		android:textAppearance="?android:attr/textAppearanceSmall"
 		android:layout_width="wrap_content"
 		android:id="@+id/widgetTextViewInfo"
-		android:shadowColor="#000000"
-		android:textColor="#FFFFFF"/>
+		android:shadowColor="#FFFFFF"
+		android:textColor="#000000"/>
 
 </LinearLayout>
 
