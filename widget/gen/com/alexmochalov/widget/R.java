@@ -50,10 +50,11 @@ public final class R {
     }
     public static final class string {
         public static final int app_name=0x7f060000;
-        public static final int auto=0x7f060004;
-        public static final int hotspot=0x7f060002;
-        public static final int ok=0x7f060003;
+        public static final int auto=0x7f060005;
+        public static final int hotspot=0x7f060003;
+        public static final int ok=0x7f060004;
         public static final int widget_name=0x7f060001;
+        public static final int widget_text=0x7f060002;
     }
     public static final class style {
         /** 

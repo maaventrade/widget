@@ -47,6 +47,7 @@ public class MyWidget extends AppWidgetProvider {
 	final static String ACTION_PRESSED = "ru.startandroid.develop.p1201clickwidget.button_pressed";
 	final static String ACTION_WIFI_STATE_CHANGED = "android.net.wifi.WIFI_AP_STATE_CHANGED";
 	final static String ACTION_POWER_CONNECTED = "android.intent.action.ACTION_POWER_CONNECTED";
+	final static String ACTION_USB_CONNECTED = "android.hardware.usb.action.USB_ACCESSORY_ATTACHED";
 	
 	@Override
 	public void onEnabled(Context context) {
@@ -220,7 +221,8 @@ public class MyWidget extends AppWidgetProvider {
 			ApManager.configApState(context);
 			writeToFile(context, "onReceive PRESSED ");
 			
-		} else if (intent.getAction().equalsIgnoreCase(ACTION_POWER_CONNECTED)){
+		} else if (intent.getAction().equalsIgnoreCase(ACTION_POWER_CONNECTED)
+				 || intent.getAction().equalsIgnoreCase(ACTION_USB_CONNECTED)){
 			// Подключено зарядное устройство
 			writeToFile(context, "onReceive POWER CONNECTED. Auto: "+autoTurn);
 			if (autoTurn)
