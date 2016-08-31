@@ -1,12 +1,12 @@
 <resources>
 
-    <string name="app_name">Turn hotspot widget</string>
-	<string name="widget_name">Turn hotspot widget</string>
-	<string name="widget_text">Turn hotspot</string>
+    <string name="app_name">Switch hotspot widget</string>
+	<string name="widget_name">Switch hotspot widget</string>
+	<string name="widget_text">Switch hotspot</string>
 	
 	<string name="hotspot">Hotspot...</string>
-	
+	   
 	<string name="ok">Ok</string>
-	<string name="auto">Turn wifi hotspot when charger connected</string>
+	<string name="auto">Switch on wifi hotspot when charger connected</string>
     
 </resources>

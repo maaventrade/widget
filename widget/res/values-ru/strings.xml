@@ -1,0 +1,12 @@
+<resources>
+
+    <string name="app_name">Виджет Переключение точки доступа</string>
+	<string name="widget_name">Виджет Переключение точки доступа</string>
+	<string name="widget_text">Switch hotspot</string>
+	
+	<string name="hotspot">Точка доступа...</string>
+	
+	<string name="ok">Ok</string>
+	<string name="auto">Включать точку доступа wifi при подключении зарядного устройства.</string>
+    
+</resources>

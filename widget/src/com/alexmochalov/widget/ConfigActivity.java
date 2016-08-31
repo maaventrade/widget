@@ -47,16 +47,14 @@ public class ConfigActivity extends Activity {
     setContentView(R.layout.config);
     
     sp = getSharedPreferences(WIDGET_PREF, MODE_PRIVATE);
+
     checkBoxAutoTurn = (CheckBox) findViewById(R.id.checkBoxAutoTurn);
-    Log.d("", "checkBoxAutoTurn "+checkBoxAutoTurn);
-    checkBoxAutoTurn.setChecked(sp.getBoolean(WIDGET_AUTO_TURNING + widgetID, false));
+    checkBoxAutoTurn.setChecked(sp.getBoolean(WIDGET_AUTO_TURNING + widgetID, true));
     
   }
   
   public void onClick(View v){
     sp.edit().putBoolean(WIDGET_AUTO_TURNING + widgetID, checkBoxAutoTurn.isChecked()).commit();
-    
-    Log.d("", "SET "+checkBoxAutoTurn.isChecked());
     
     MyWidget.updateWidget(this, AppWidgetManager.getInstance(this), widgetID);
     

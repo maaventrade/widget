@@ -1,39 +1,19 @@
 package com.alexmochalov.widget;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.lang.reflect.Method;
-import java.sql.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
-import com.alexmochalov.widget.R;
-
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.net.wifi.WifiManager;
-import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.widget.RemoteViews;
 
 public class MyWidget extends AppWidgetProvider {
-	final static String pathToFile = Environment.getExternalStorageDirectory().getPath() + "/log.html"; 
+	//final static String pathToFile = Environment.getExternalStorageDirectory().getPath() + "/log.html"; 
 	
 	private static boolean pressed = false;
 
@@ -47,7 +27,7 @@ public class MyWidget extends AppWidgetProvider {
 	final static String ACTION_PRESSED = "ru.startandroid.develop.p1201clickwidget.button_pressed";
 	final static String ACTION_WIFI_STATE_CHANGED = "android.net.wifi.WIFI_AP_STATE_CHANGED";
 	final static String ACTION_POWER_CONNECTED = "android.intent.action.ACTION_POWER_CONNECTED";
-	final static String ACTION_USB_CONNECTED = "android.hardware.usb.action.USB_ACCESSORY_ATTACHED";
+	final static String USB_ACCESSORY_ATTACHED = "android.intent.action.UMS_CONNECTED";
 	
 	@Override
 	public void onEnabled(Context context) {
@@ -95,6 +75,8 @@ public class MyWidget extends AppWidgetProvider {
 				ConfigActivity.WIDGET_PREF, Context.MODE_PRIVATE);
 		autoTurn = sp.getBoolean(ConfigActivity.WIDGET_AUTO_TURNING
 				+ widgetID, false);
+		
+		writeToFile(context, "Read AUTO. Auto: "+autoTurn+" widgetID "+widgetID);		
 		
 		Intent buttonIntent = new Intent(context, MyWidget.class);
 		buttonIntent.setAction(ACTION_PRESSED);
@@ -169,6 +151,7 @@ public class MyWidget extends AppWidgetProvider {
 	}
 	
 	private void clearFile(Context context) {
+		/*
 		try {
 			File file = new File(pathToFile);
 			
@@ -179,9 +162,11 @@ public class MyWidget extends AppWidgetProvider {
 	    catch (IOException e) {
 	        Log.e("Exception", "File write failed: " + e.toString());
 	    } 
+		*/
 	}
 	
 	private static void writeToFile(Context context, String string) {
+		/*
 		try {
 			File file = new File(pathToFile);
 			
@@ -195,6 +180,7 @@ public class MyWidget extends AppWidgetProvider {
 	    catch (IOException e) {
 	        Log.e("Exception", "File write failed: " + e.toString());
 	    } 
+		*/
 	}
 	
 	
@@ -221,10 +207,16 @@ public class MyWidget extends AppWidgetProvider {
 			ApManager.configApState(context);
 			writeToFile(context, "onReceive PRESSED ");
 			
-		} else if (intent.getAction().equalsIgnoreCase(ACTION_POWER_CONNECTED)
-				 || intent.getAction().equalsIgnoreCase(ACTION_USB_CONNECTED)){
+		} else if (intent.getAction().equalsIgnoreCase(ACTION_POWER_CONNECTED)){
 			// Подключено зарядное устройство
 			writeToFile(context, "onReceive POWER CONNECTED. Auto: "+autoTurn);
+			
+			if (autoTurn)
+				// Включаем wifi hotspot 
+				ApManager.configApState(context, true);
+		} else if (intent.getAction().equalsIgnoreCase(USB_ACCESSORY_ATTACHED)){
+			// Подключен к компьютеру через USB
+			writeToFile(context, "onReceive USB CONNECTED. Auto: "+autoTurn);
 			if (autoTurn)
 				// Включаем wifi hotspot 
 				ApManager.configApState(context, true);

@@ -40,12 +40,14 @@
 		<intent-filter>
             <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
         </intent-filter>
+		
         		
         </receiver>
-        <activity android:name="ConfigActivity"  android:icon="@drawable/ic_launcher">
+        <activity android:name="ConfigActivity"  android:icon="@drawable/btn3">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" >
-                </action>
+                <action android:name="android.intent.action.UMS_CONNECTED" >
+					
+					</action>
             </intent-filter>
         </activity>
     </application>
